@@ -101,4 +101,73 @@ class feedforwardlayer(nn.Module):
     def forward(self, x):
         return self.layer2(self.dropout(torch.relu(self.layer1(x))))
     
+
+
+# multi-head attention 
+
+# Attention(Q, K, V ) = softmax(Q.k/ √dmodel)* V
+
+
+# MultiHead(Q, K, V ) = Concat(head1, ..., headh)W O 
+
+# where headi = Attention(QWiQ , K WiK , V WiV )
+
+# Where the projections are parameter matrices WiQ ∈ R dmodel ×dk , WiK ∈ R dmodel ×dk , 
+
+# WiV ∈ Rdmodel ×dv andWO ∈Rhdv×dmodel.
+
+# In this work we employ h = 8 parallel attention layers, or heads. 
+# For each of these we use dk = dv = dmodel/h = 64. 
+# Due to the reduced dimension of each head,
+# the total computational cost is similar to 
+# that of single-head attention with full dimensionality.
+
+
+
+class multiheadattention(nn.Module):
     
+    def __init__(self, d_model:int, num_heads:int, dropout:float):
+        
+        super().__init__()
+        
+        self.d_model = d_model
+        self.num_heads = num_heads
+        
+        assert d_model % num_heads == 0 , "d_model should be divisible by num_heads"
+        
+        self.dk = d_model // num_heads
+        
+        self.WQ = nn.Linear(d_model, d_model)
+        self.WK = nn.Linear(d_model, d_model)
+        self.WV = nn.Linear(d_model, d_model)
+        
+        self.w0 = nn.Linear(d_model, d_model)
+        self.dropout = nn.Dropout(dropout)
+        
+    def forward(self,q,k,v,mask_dec):
+        
+        batch_size = q.size(0)
+        
+        Q = self.WQ(q).view(batch_size, -1, self.num_heads, self.dk).transpose(1, 2)
+        K = self.WK(k).view(batch_size, -1, self.num_heads, self.dk).transpose(1, 2)
+        V = self.WV(v).view(batch_size, -1, self.num_heads, self.dk).transpose(1, 2)
+        
+        #attention(Q,K,V) = softmax(Q.k/ √dmodel)* V
+        # (batch_size, num_heads, seq_len, dk)
+        attention = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.dk)
+        
+        if mask_dec is not None:
+            attention = attention.masked_fill(mask_dec == 0, float('-1e20'))
+            
+        attention = torch.softmax(attention, dim = -1)
+        attention = self.dropout(attention)
+        
+        # (batch_size, num_heads, seq_len, dk)
+        output = torch.matmul(attention, V)
+        
+        # (batch_size, seq_len, num_heads, dk)
+        output = output.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
+        
+        return self.w0(output)
+        
+        
