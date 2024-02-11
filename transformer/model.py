@@ -22,6 +22,8 @@ class InputEmbeddinglayer(nn.Module):
         return self.embedding(x) * math.sqrt(self.d_model)  
 
 
+#positional embedding layer
+
 class postionalembeddinglayer(nn.Module):
     
     def __init__(self, d_model:int, seq_len:int, dropout: float):
