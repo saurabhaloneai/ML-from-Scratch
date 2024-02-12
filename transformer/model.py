@@ -144,6 +144,10 @@ class multiheadattention(nn.Module):
         self.w0 = nn.Linear(d_model, d_model)
         self.dropout = nn.Dropout(dropout)
         
+    @staticmethod
+    def attention(q,k,v,mask_dec):
+            
+    
     def forward(self,q,k,v,mask_dec):
         
         batch_size = q.size(0)
