@@ -295,19 +295,19 @@ class Encoder(nn.Module):
         return self.norm(x)
     
     
-class Decoderblock(nn.Module):
+# class Decoderblock(nn.Module):
     
-    def __init__(self, self_attention: Multiheadattention, cross_attention: Multiheadattention, feedforward: feedforwardlayer, dropout: float):
-        super().__init__()
-        self.self_attention = self_attention
-        self.cross_attention = cross_attention
-        self.feedforward = feedforward
+#     def __init__(self, self_attention: Multiheadattention, cross_attention: Multiheadattention, feedforward: feedforwardlayer, dropout: float):
+#         super().__init__()
+#         self.self_attention = self_attention
+#         self.cross_attention = cross_attention
+#         self.feedforward = feedforward
         
-        self.residualconnections = nn.Module([residualconnection(dropout)for _ in range(3)])
+#         self.residualconnections = nn.Module([residualconnection(dropout)for _ in range(3)])
         
-        #  self.residualconnection1 = residualconnection(self_attention.d_model, dropout)
-        #  self.residualconnection2 = residualconnection(cross_attention.d_model, dropout)
-        #  self.residualconnection3 = residualconnection(feedforward.d_model, dropout)
+#         #  self.residualconnection1 = residualconnection(self_attention.d_model, dropout)
+#         #  self.residualconnection2 = residualconnection(cross_attention.d_model, dropout)
+#         #  self.residualconnection3 = residualconnection(feedforward.d_model, dropout)
         
-    def forward(self, x, enc_output, mask_enc, mask_dec):
-        pass 
+#     def forward(self, x, enc_output, mask_enc, mask_dec):
+#         pass 
