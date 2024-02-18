@@ -310,4 +310,42 @@ class Decoderblock(nn.Module):
         #  self.residualconnection3 = residualconnection(feedforward.d_model, dropout)
         
     def forward(self, x, enc_output, mask_enc, mask_dec):
-        pass 
+        
+        x = self.residualconnections[0](x, lambda x: self.self_attention(x, x, x, mask_dec))
+        x = self.residualconnections[1](x, lambda x: self.cross_attention(x, enc_output, enc_output, mask_enc))
+        x = self.residualconnections[2](x, self.feedforward)
+        return x
+        
+
+# decoder
+
+class Decoder(nn.Module):
+    
+    def __init__(self, layers: nn.ModuleList):
+        super().__init__()
+        self.layers = layers
+        self.norm = layernorm()
+        
+    def forward(self, x, enc_output, mask_enc, mask_dec):
+        for layer in self.layers:
+            x = layer(x, enc_output, mask_enc, mask_dec)
+        return self.norm(x)
+    
+class linearlayer(nn.Module):
+    '''
+    This will take the input and apply the linear layer
+    
+    '''
+    
+    def __init__(self, d_model:int, vocab_size:int):
+        super().__init__()
+        self.linear = nn.Linear(d_model, vocab_size)
+        
+    def forward(self, x):
+        return torch.log_softmax(self.linear(x), dim = -1)
+    
+    
+#Transformer block 
+
+class Transformer(nn.Module):
+    pass
