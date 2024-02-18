@@ -1,6 +1,6 @@
 # ml-from-Scratch
 
-# Transformer README
+# Transformer - first paper - > Attention is all you need
 
 ## Introduction
 
