@@ -25,6 +25,11 @@ class InputEmbeddinglayer(nn.Module):
 #positional embedding layer
 
 class postionalembeddinglayer(nn.Module):
+    '''
+    This will take the input and apply the positional embedding
+    parameters : d_model : int : size of the vector, 
+    seq_len : int : length of the sequence, dropout : float : dropout rate
+    '''
     
     def __init__(self, d_model:int, seq_len:int, dropout: float):
         
@@ -66,6 +71,10 @@ class postionalembeddinglayer(nn.Module):
 # layer normailzation 
 
 class layernorm(nn.Module):
+    '''
+    This will take the input and apply the layer normalization
+    parameters : d_model : int : size of the vector, eps : float : epsilon
+    '''
     
     
     def __init__(self, eps:float = 1e-6):
@@ -86,6 +95,11 @@ class layernorm(nn.Module):
 # FFN(x) = max(0, xW1 + b1 )W2 + b2   
 
 class feedforwardlayer(nn.Module):
+    '''
+    This will take the input and apply the feed forward layer
+    parameters : d_model : int : size of the vector,
+    d_ff : int : size of the feed forward layer, dropout : float : dropout rate
+    '''
     
     def __init__(self, d_model:int, d_ff:int, dropout:float):
         
@@ -103,7 +117,7 @@ class feedforwardlayer(nn.Module):
     
 
 
-# multi-head attention 
+# multi-head attention (from paper)
 
 # Attention(Q, K, V ) = softmax(Q.k/ √dmodel)* V
 
@@ -124,7 +138,13 @@ class feedforwardlayer(nn.Module):
 
 
 
-class multiheadattention(nn.Module):
+class Multiheadattention(nn.Module):
+    '''
+    This will take the input and apply the multihead attention
+    parameters : d_model : int : size of the vector, 
+    num_heads : int : number of heads, dropout : float : dropout rate
+
+    '''
     
     def __init__(self, d_model:int, num_heads:int, dropout:float):
         
@@ -145,33 +165,149 @@ class multiheadattention(nn.Module):
         self.dropout = nn.Dropout(dropout)
         
     @staticmethod
-    def attention(q,k,v,mask_dec):
+    def attention(q,k,v,mask_dec,dropout: nn.Dropout):
+        '''
+        This will take the query, key, value and mask and apply the attention
+        parameters : q : tensor : query, k : tensor : key,
+        v : tensor : value, mask_dec : tensor : mask, 
+        dropout : nn.Dropout : dropout layer
+        '''
+        
+        
+        d_k = q.shpae[-1]
+        
+        # (batch_size, num_heads, seq_len, dk)  --> (batch_size, num_heads, seq_len, seq_len)
+        
+        atten_scores = torch.matmul(q @ k.transpose(-2, -1)) / math.sqrt(d_k)
+        
+        if mask_dec is not None :
+            atten_scores = atten_scores.masked_fill(mask_dec == 0, float('-1e20'))
+        
+        atten_scores = torch.softmax(atten_scores, dim = -1)
+        
+        if dropout is not None:
+            atten_scores = dropout(atten_scores)
+            
+        return (atten_scores @ v), atten_scores
+
+    # batch_size = q.size(0)
+        
+        # Q = self.WQ(q).view(batch_size, -1, self.num_heads, self.dk).transpose(1, 2)
+        # K = self.WK(k).view(batch_size, -1, self.num_heads, self.dk).transpose(1, 2)
+        # V = self.WV(v).view(batch_size, -1, self.num_heads, self.dk).transpose(1, 2)
+        
+        # #attention(Q,K,V) = softmax(Q.k/ √dmodel)* V
+        # # (batch_size, num_heads, seq_len, dk)
+        # attention = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.dk)
+        
+        # if mask_dec is not None:
+        #     attention = attention.masked_fill(mask_dec == 0, float('-1e20'))
+            
+        # attention = torch.softmax(attention, dim = -1)
+        # attention = self.dropout(attention)
+        
+        # # (batch_size, num_heads, seq_len, dk)
+        # output = torch.matmul(attention, V)
+        
+        # # (batch_size, seq_len, num_heads, dk)
+        # output = output.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
+        
+        # return self.w0(output)
             
     
     def forward(self,q,k,v,mask_dec):
         
-        batch_size = q.size(0)
+        query = self.w_q(q) # (batch_size, seq_len, d_model) --> (batch_size, seq_len, d_model)
+        key = self.w_k(k) # (batch_size, seq_len, d_model) --> (batch_size, seq_len, d_model)
+        value = self.w_v(v) # (batch_size, seq_len, d_model) --> (batch_size, seq_len, d_model)
         
-        Q = self.WQ(q).view(batch_size, -1, self.num_heads, self.dk).transpose(1, 2)
-        K = self.WK(k).view(batch_size, -1, self.num_heads, self.dk).transpose(1, 2)
-        V = self.WV(v).view(batch_size, -1, self.num_heads, self.dk).transpose(1, 2)
+        # (batch_size, seq_len, d_model) --> (batch_size, seq_len, num_heads, dk)
         
-        #attention(Q,K,V) = softmax(Q.k/ √dmodel)* V
-        # (batch_size, num_heads, seq_len, dk)
-        attention = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.dk)
+        query = query.view(query.shape[0], query.shape[1], self.num_heads, self.dk).transpose(1, 2)
+        key = key.view(key.shape[0], key.shape[1], self.num_heads, self.dk).transpose(1, 2)
+        value = value.view(value.shape[0], value.shape[1], self.num_heads, self.dk).transpose(1, 2)
         
-        if mask_dec is not None:
-            attention = attention.masked_fill(mask_dec == 0, float('-1e20'))
-            
-        attention = torch.softmax(attention, dim = -1)
-        attention = self.dropout(attention)
+        x, self.atten_scores = self.attention(query, key, value, mask_dec, self.dropout)
         
-        # (batch_size, num_heads, seq_len, dk)
-        output = torch.matmul(attention, V)
+        x = x.transpose(1, 2).contiguous().view(x.shape[0], -1, self.h * self.dk)
         
-        # (batch_size, seq_len, num_heads, dk)
-        output = output.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
+        return self.w0(x)
+   
+#------------Basic buildig block ends here----------------#
+
+
+
+# residual connection
+
+class residualconnection(nn.Module):
+    '''
+    
+    This will take the input and apply the residual connection
+    
+    '''
+    
+    def __init__(self, size:int, dropout:float):
+        super().__init__()  
+        self.norm = layernorm(size)
+        self.dropout = nn.Dropout(dropout)
         
-        return self.w0(output)
+        def forward(self, x, sublayer):
+            return x + self.dropout(sublayer(self.norm(x)))
         
         
+class Encoderblock(nn.Module):
+    '''
+    This will take the input and apply the encoder block
+    
+    '''
+    
+    def __init__(self, d_model:int, num_heads:int, d_ff:int, dropout:float):
+        super().__init__()
+        
+        self.Multiheadattention = Multiheadattention(d_model, num_heads, dropout)
+        self.feedforwardlayer = feedforwardlayer(d_model, d_ff, dropout)
+        
+        self.residualconnection1 = residualconnection(d_model, dropout)
+        self.residualconnection2 = residualconnection(d_model, dropout)
+        
+    def forward(self, x, mask_enc):
+        x = self.residualconnection1(x, lambda x: self.Multiheadattention(x, x, x, mask_enc))
+        x = self.residualconnection2(x, self.feedforwardlayer)
+        return x
+        
+
+        
+        
+        
+class Encoder(nn.Module):
+    '''
+    This will take the input and apply the encoder
+    
+    '''
+    def __init__(self,layers: nn.ModuleList):
+        super().__init__()
+        self.layers = layers
+        self.norm = layernorm(layers[0].d_model)
+        
+    def forward(self, x, mask_enc):
+        for layer in self.layers:
+            x = layer(x, mask_enc)
+        return self.norm(x)
+    
+    
+class Decoderblock(nn.Module):
+    
+    def __init__(self, self_attention: Multiheadattention, cross_attention: Multiheadattention, feedforward: feedforwardlayer, dropout: float):
+        super().__init__()
+        self.self_attention = self_attention
+        self.cross_attention = cross_attention
+        self.feedforward = feedforward
+        
+        self.residualconnections = nn.Module([residualconnection(dropout)for _ in range(3)])
+        
+        #  self.residualconnection1 = residualconnection(self_attention.d_model, dropout)
+        #  self.residualconnection2 = residualconnection(cross_attention.d_model, dropout)
+        #  self.residualconnection3 = residualconnection(feedforward.d_model, dropout)
+        
+    def forward(self, x, enc_output, mask_enc, mask_dec):
+        pass 
