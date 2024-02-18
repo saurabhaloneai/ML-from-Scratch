@@ -279,20 +279,20 @@ class Encoderblock(nn.Module):
         
         
         
-class Encoder(nn.Module):
-    '''
-    This will take the input and apply the encoder
+# class Encoder(nn.Module):
+#     '''
+#     This will take the input and apply the encoder
     
-    '''
-    def __init__(self,layers: nn.ModuleList):
-        super().__init__()
-        self.layers = layers
-        self.norm = layernorm(layers[0].d_model)
+#     '''
+#     def __init__(self,layers: nn.ModuleList):
+#         super().__init__()
+#         self.layers = layers
+#         self.norm = layernorm(layers[0].d_model)
         
-    def forward(self, x, mask_enc):
-        for layer in self.layers:
-            x = layer(x, mask_enc)
-        return self.norm(x)
+#     def forward(self, x, mask_enc):
+#         for layer in self.layers:
+#             x = layer(x, mask_enc)
+#         return self.norm(x)
     
     
 class Decoderblock(nn.Module):
