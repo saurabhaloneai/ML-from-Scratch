@@ -345,7 +345,6 @@ class linearlayer(nn.Module):
     '''
     This will take the input and apply the linear layer
     parameters : d_model : int : size of the vector, vocab_size : int : size of the vocablury
-    
     '''
     
     def __init__(self, d_model:int, vocab_size:int):
