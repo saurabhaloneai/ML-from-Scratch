@@ -331,18 +331,18 @@ class Decoder(nn.Module):
             x = layer(x, enc_output, mask_enc, mask_dec)
         return self.norm(x)
     
-# class linearlayer(nn.Module):
-#     '''
-#     This will take the input and apply the linear layer
+class linearlayer(nn.Module):
+    '''
+    This will take the input and apply the linear layer
     
-#     '''
+    '''
     
-#     def __init__(self, d_model:int, vocab_size:int):
-#         super().__init__()
-#         self.linear = nn.Linear(d_model, vocab_size)
+    def __init__(self, d_model:int, vocab_size:int):
+        super().__init__()
+        self.linear = nn.Linear(d_model, vocab_size)
         
-#     def forward(self, x):
-#         return torch.log_softmax(self.linear(x), dim = -1)
+    def forward(self, x):
+        return torch.log_softmax(self.linear(x), dim = -1)
     
     
 #Transformer block 
