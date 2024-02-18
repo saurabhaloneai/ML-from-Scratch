@@ -258,6 +258,7 @@ class residualconnection(nn.Module):
 class Encoderblock(nn.Module):
     '''
     This will take the input and apply the encoder block
+    parameters : d_model : int : size of the vector,
     
     '''
     
@@ -282,6 +283,7 @@ class Encoderblock(nn.Module):
 class Encoder(nn.Module):
     '''
     This will take the input and apply the encoder
+    paramaters : layers : nn.ModuleList : list of layers
     
     '''
     def __init__(self,layers: nn.ModuleList):
@@ -296,7 +298,10 @@ class Encoder(nn.Module):
     
     
 class Decoderblock(nn.Module):
-    
+    '''
+    This block will take the input and apply the decoder block
+    Parameters : self_attention : Multiheadattention : self attention layer
+    '''
     def __init__(self, self_attention: Multiheadattention, cross_attention: Multiheadattention, feedforward: feedforwardlayer, dropout: float):
         super().__init__()
         self.self_attention = self_attention
@@ -320,6 +325,11 @@ class Decoderblock(nn.Module):
 # decoder
 
 class Decoder(nn.Module):
+    '''
+    this block will take the input and apply the decoder
+    parameters : layers : nn.ModuleList : list of layers
+    
+    '''
     
     def __init__(self, layers: nn.ModuleList):
         super().__init__()
@@ -334,6 +344,7 @@ class Decoder(nn.Module):
 class linearlayer(nn.Module):
     '''
     This will take the input and apply the linear layer
+    parameters : d_model : int : size of the vector, vocab_size : int : size of the vocablury
     
     '''
     
@@ -348,6 +359,10 @@ class linearlayer(nn.Module):
 #Transformer block 
 
 class Transformer(nn.Module):
+    '''
+    This block will combine the encoder and decoder and submodules
+    parameters : encoder : Encoder : encoder block, decoder : Decoder : decoder block,
+    '''
     
     def __init__(self, encoder : Encoder, decoder : Decoder, dec_embed: InputEmbeddinglayer, enc_embed: InputEmbeddinglayer,pos_dec : postionalembeddinglayer, pos_enc: postionalembeddinglayer, linear: linearlayer):
         super().__init__()
@@ -370,6 +385,11 @@ class Transformer(nn.Module):
     
 
 def build_trarnsformer(enc_vocab_size : int, dec_vocab_size : int, enc_seq_len: int, dec_seq_len: int ,d_model: int =512, h:int =8 , N : int =6, dropout : float = 0.1, d_ff: int = 2048):
+    '''
+    this block will build the transformer
+    parameters : enc_vocab_size : int : size of the encoder vocablury, dec_vocab_size : int : size of the decoder vocablury,
+    
+    '''
     # creats the embedding layer 
     
     enc_embed = InputEmbeddinglayer(d_model, enc_vocab_size)
