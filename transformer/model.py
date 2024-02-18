@@ -348,4 +348,22 @@ class linearlayer(nn.Module):
 #Transformer block 
 
 class Transformer(nn.Module):
+    
+    def __init__(self, encoder : Encoder, decoder : Decoder, dec_embed: InputEmbeddinglayer, enc_embed: InputEmbeddinglayer, pos_dec: postionalembeddinglayer, pos_enc: postionalembeddinglayer, linear: linearlayer):
+        super().__init__()
+        self.encoder = encoder
+        self.decoder = decoder
+        self.dec_embed = dec_embed
+        self.enc_embed = enc_embed
+        self.pos_dec = pos_dec
+        self.pos_enc = pos_enc
+        self.linear = linear
+        
+    def encoder(self, src, mask_enc):
+        return self.encoder(self.enc_embed(src) + self.pos_enc(src), mask_enc)
+    
+    def decoder(self, trg, enc_output, mask_enc, mask_dec):
+        return self.decoder(self.dec_embed(trg) + self.pos_dec(trg), enc_output, mask_enc, mask_dec)
+    
+    
     pass
