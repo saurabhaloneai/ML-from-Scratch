@@ -25,3 +25,7 @@ def get_tokenizer(config, ds , lang):
     else:
         tokenizer = Tokenizer.from_file(str(tokenizer_path))
     return tokenizer
+
+def datatset():
+    ds = load_dataset('wmt16', 'de-en', split='train[:1%]')
+    return ds
