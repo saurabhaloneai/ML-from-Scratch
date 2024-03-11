@@ -25,5 +25,5 @@ print("convo1D RES : ", convo1d(x,w,p=2,s=1))
 
 print("convo1d: full: ", np.convolve(x,w,mode='full'))
 
-print("convo1d: same: ",np.convolve(x,w,mode='full'))
+print("convo1d: same: ",np.convolve(x,w,mode='same'))
 print("convo1d: valid: ",np.convolve(x,w,mode='valid'))
