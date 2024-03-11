@@ -4,7 +4,7 @@ import numpy as np
 
 def convo1d(x,w,s=1,p=0):
 
-    w_rot = np.array(w[::-1])
+    w_rot = np.array(w[::-1]) #according to the original formula :)
     x_padded = np.array(x)
 
     if p >0 :
@@ -13,8 +13,8 @@ def convo1d(x,w,s=1,p=0):
         res =[]
 
     for i in range(0, int((len(x_padded)-len(w_rot)))+1,s):
-        res.append(np.sum(x_padded[i:i+w_rot.shape[0]]*w_rot))
-    return np.array(res)
+        res.append(np.sum(x_padded[i:i+w_rot.shape[0]]*w_rot)) #here we sliding 
+    return np.array(res)                                       #our kernel through inputs
 
 ##testing 
 
