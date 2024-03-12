@@ -34,7 +34,7 @@ def convo1d(x,w,p=0,s=1):
 
     for i in range(0,int((len(x_padded)-len(w)))+1,s):
         
-        res.append(np.sum(x_padded[i:i+w.shape[0]]*w)) #its the length of the kernel that is start with i and ends with i + w.shape
+        res.append(np.dot(x_padded[i:i+w.shape[0]],w)) #its the length of the kernel that is start with i and ends with i + w.shape
 
     return res 
 
