@@ -1,7 +1,6 @@
 #lets build the convo function for 1D
-
+#:""
 import numpy as np 
-
 def convo1d(x,w,s=1,p=0):
 
     w_rot = np.array(w[::-1]) #according to the original formula :)
@@ -27,3 +26,25 @@ print("convo1d: full: ", np.convolve(x,w,mode='full'))
 
 print("convo1d: same: ",np.convolve(x,w,mode='same'))
 print("convo1d: valid: ",np.convolve(x,w,mode='valid'))
+
+
+#lets build convo for 2d 
+
+def convo1d(x,w,p=0,s=1):
+
+    x_array = np.array(x)
+    w = np.array(w)
+
+    if p > 0 :
+        padding = np.zeros(shape=p)
+        x_padded = np.concatenate([padding,x_array,padding])
+
+
+    res = []
+
+    for i in range(0,int((len(x_padded)-len(w)))+1,s):
+        
+        res.append(np.sum(x_padded[i:i+w.sahpe[0]]*w))
+
+     return res 
+
