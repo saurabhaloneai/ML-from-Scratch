@@ -1,42 +1,42 @@
 #lets build the convo function for 1D
 #:""
 import numpy as np 
-def convo1d(x,w,s=1,p=0):
+# def convo1d(x,w,s=1,p=0):
 
-    w_rot = np.array(w) #according to the original formula :)
-    x_padded = np.array(x)
+#     w_rot = np.array(w) #according to the original formula :)
+#     x_padded = np.array(x)
 
-    if p >0 :
-        zero_pad = np.zeros(shape=p)
-        x_padded = np.concatenate([zero_pad, x_padded, zero_pad])
-        res =[]
+#     if p >0 :
+#         zero_pad = np.zeros(shape=p)
+#         x_padded = np.concatenate([zero_pad, x_padded, zero_pad])
+#         res =[]
 
-    for i in range(0, int((len(x_padded)-len(w_rot)))+1,s):
-        res.append(np.sum(x_padded[i:i+w_rot.shape[0]]*w_rot)) #here we sliding 
-    return np.array(res)                                       #our kernel through inputs
-
-
+#     for i in range(0, int((len(x_padded)-len(w_rot)))+1,s):
+#         res.append(np.sum(x_padded[i:i+w_rot.shape[0]]*w_rot)) #here we sliding 
+#     return np.array(res)                                       #our kernel through inputs
 
 
-# #lets build convo for 2d 
-
-# def convo1d(x,w,p=0,s=1):
-
-#     x_array = np.array(x)
-#     w = np.array(w)
-
-#     if p > 0 :
-#         padding = np.zeros(shape=p)
-#         x_padded = np.concatenate([padding,x_array,padding])
 
 
-#     res = []
+#lets build convo for 1d but with cross-corelation  
 
-#     for i in range(0,int((len(x_padded)-len(w)))+1,s):
+def convo1d(x,w,p=0,s=1):
+
+    x_array = np.array(x)
+    w = np.array(w)
+
+    if p > 0 :
+        padding = np.zeros(shape=p)
+        x_padded = np.concatenate([padding,x_array,padding])
+
+
+    res = []
+
+    for i in range(0,int((len(x_padded)-len(w)))+1,s):
         
-#         res.append(np.sum(x_padded[i:i+w.shape[0]]*w))
+        res.append(np.sum(x_padded[i:i+w.shape[0]]*w))
 
-#     return res 
+    return res 
 
 ##testing 
 
