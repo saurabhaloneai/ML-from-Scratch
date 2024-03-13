@@ -1,6 +1,7 @@
 #lets build the convo function for 1D
 #:""
 import numpy as np 
+import scipy.signal 
 # def convo1d(x,w,s=1,p=0):
 
 #     w_rot = np.array(w) #according to the original formula :)
@@ -88,3 +89,4 @@ x = [[1,3,2,4],[5,6,1,3],[1,2,0,2],[3,4,3,2]]
 w = [[1,0,3],[1,2,1],[0,1,1]]
 
 print("convo2d : ",convo2d(x,w,p=(1,1),s=(1,1)))
+print("convo2d with scipy : ",scipy.signal.convolve2d(x,w,mode='same'))
