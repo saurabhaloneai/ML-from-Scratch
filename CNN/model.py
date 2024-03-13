@@ -64,7 +64,7 @@ def convo2d(x,w,s=(1,1),p=(0,0)):
 
     x_padded = np.zeros(shape = (n1,n2))
 
-    x_padded[p[0]:p[0]+x_orig[0],p[1]:p[1]+x_orig[1]] = x_orig 
+    x_padded[p[0]:p[0]+x_orig.shape[0],p[1]:p[1]+x_orig.shape[1]] = x_orig 
 
     res = []
 
