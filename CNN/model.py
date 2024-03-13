@@ -49,3 +49,10 @@ print("convo1d: full: ", np.convolve(x,w,mode='same'))
 
 print("convo1d: same: ",np.convolve(x,w,mode='same'))
 print("convo1d: valid: ",np.convolve(x,w,mode='valid'))
+
+
+#let's build the convo2d 
+
+def convo2d(x,w,s=1,p=0):
+
+    pass 
