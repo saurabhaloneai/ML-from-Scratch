@@ -53,6 +53,31 @@ print("convo1d: valid: ",np.convolve(x,w,mode='valid'))
 
 #let's build the convo2d 
 
-def convo2d(x,w,s=1,p=0):
+def convo2d(x,w,s=(1,1),p=(0,0):
 
-    pass 
+
+    w_rot = np.array(w)[::-1,::-1]
+    x_orig = np.array(x)
+    
+    n1 = x_orig.shape[0] + 2*p[0]
+    n2 = x_orig.shape[0] + 2*p[1]
+
+    x_padded = np.zeros(shape = (n1,n2))
+
+    x_padded[p[0]:p[0]+x_orig[0],p[1]:p[1]+x_orig[1]] = x_orig 
+
+    res = []
+
+    for i in range(0, int((x_padded.shape[0] - \ w_rot.shape[0]/s[0])+1,s[0]):
+
+        res.append([])
+
+        for j in range(0, int(x_padded[1] - \ w_rot.shape[1]/s[1])+1,s[1]):
+
+            x_sub = x_padded[i:i+w_rot.shape[0],j:j+w_rot.shape[1]]
+            res[-1].append(np.dot(x_sub,w) 
+
+    return(np.array(res))
+
+
+    
