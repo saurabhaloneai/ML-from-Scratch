@@ -80,4 +80,4 @@ def convo2d(x,w,s=(1,1),p=(0,0):
     return(np.array(res))
 
 
-    
+#lets provide the inputs for convo2d 
