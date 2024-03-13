@@ -68,11 +68,11 @@ def convo2d(x,w,s=(1,1),p=(0,0)):
 
     res = []
 
-    for i in range(0, int(x_padded.shape[0] - w_rot.shape[0]/s[0])+1,s[0]):
+    for i in range(0, int((x_padded.shape[0] - w_rot.shape[0])/s[0])+1,s[0]):
 
         res.append([])
 
-        for j in range(0, int(x_padded[1] -  w_rot.shape[1]/s[1])+1,s[1]):
+        for j in range(0, int((x_padded[1] -  w_rot.shape[1])/s[1])+1,s[1]):
 
             x_sub = x_padded[i:i+w_rot.shape[0],j:j+w_rot.shape[1]]
             res[-1].append(np.dot(x_sub,w)) 
