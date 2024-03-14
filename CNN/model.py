@@ -101,7 +101,7 @@ def conv2d(x, w, s=(1, 1), p=(0, 0)):
             x_sub = x_padded[i * s[0]:i * s[0] + w.shape[0], j * s[1]:j * s[1] + w.shape[1]]
             output[i, j] = np.sum(x_sub * w)
 
-    return output
+    return output       
 
 
 #lets provide the inputs for convo2d
@@ -113,3 +113,6 @@ w = [[1,0,3],[1,2,1],[0,1,1]]
 
 print("convo2d : ",conv2d(x,w,p=(1,1),s=(1,1)))
 print("convo2d with scipy : ",scipy.signal.convolve2d(x,w,mode='same'))
+
+
+#lets build the cnn from scratch by combininig all we learn 
