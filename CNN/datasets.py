@@ -1,7 +1,8 @@
 import os
 from PIL import Image
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torchvision import transforms
+from torch.utils.data import Dataset
 
 class WhaleDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -26,8 +27,11 @@ class WhaleDataset(Dataset):
         file_path, target = self.samples[idx]
         image = Image.open(file_path)
 
+        # Resize the image to a fixed size
+        resize_transform = transforms.Resize((224, 224))
+        image = resize_transform(image)
+
         if self.transform:
             image = self.transform(image)
 
         return image, target
-
