@@ -25,7 +25,7 @@ class WhaleDataset(Dataset):
 
     def __getitem__(self, idx):
         file_path, target = self.samples[idx]
-        image = Image.open(file_path)
+        image = Image.open(file_path).convert('RGB')  # Convert to RGB
 
         # Resize the image to a fixed size
         resize_transform = transforms.Resize((224, 224))
