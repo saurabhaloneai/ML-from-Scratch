@@ -13,7 +13,9 @@ class WhaleDataset(Dataset):
 
         # Loop through the folders
         folder_labels = sorted(os.listdir(root_dir))  # Sort the folder names
+        
         for i, folder in enumerate(folder_labels):
+            i=0
             folder_path = os.path.join(root_dir, folder)
             if os.path.isdir(folder_path):
                 self.target_dict[folder] = i  # Assign a target value to each folder

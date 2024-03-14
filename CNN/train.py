@@ -58,3 +58,37 @@ for epoch in range(num_epochs):
         running_loss += loss.item()
 
     print(f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss/len(train_dataloader)}")
+
+model_path ='/Users/sasaurabhurabhvaishubhalone/Desktop/ML-from-scratch/CNN/weights.pth'
+
+#save the model
+
+torch.save(model.state_dict(), model_path)
+
+#show th prediction using matplotlib
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+#load the model
+
+model = CNN(num_classes=2)
+model.load_state_dict(torch.load(model_path))
+model.eval()
+
+# Get a batch of test data
+inputs, labels = next(iter(test_dataloader))
+
+# Make predictions
+with torch.no_grad():
+    outputs = model(inputs)
+    _, predicted = torch.max(outputs, 1)
+
+# Plot the results
+fig, axes = plt.subplots(1, 4, figsize=(10, 5))
+
+for i in range(4):
+    axes[i].imshow(np.transpose(inputs[i], (1, 2, 0)))
+    axes[i].set_title(f'Predicted: {predicted[i]}, Actual: {labels[i]}')
+    axes[i].axis('off')
+    plt.show()
