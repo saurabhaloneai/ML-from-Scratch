@@ -38,7 +38,7 @@ from torch import nn
 
 # Create model, loss function and optimizer
 
-model = CNN(num_classes=2)
+model = CNN(num_classes=5)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -78,7 +78,7 @@ import numpy as np
 
 #load the model
 
-model = CNN(num_classes=2)
+model = CNN(num_classes=5)
 model.load_state_dict(torch.load(model_path))
 model.eval()
 
