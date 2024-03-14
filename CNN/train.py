@@ -58,12 +58,18 @@ for epoch in range(num_epochs):
         running_loss += loss.item()
 
     print(f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss/len(train_dataloader)}")
+    
+
+#---------------------Saving the model--------------------------------#
 
 model_path ='/Users/sasaurabhurabhvaishubhalone/Desktop/ML-from-scratch/CNN/weights.pth'
 
 #save the model
 
 torch.save(model.state_dict(), model_path)
+
+
+##---------------------------testing-------------------------------------##
 
 #show th prediction using matplotlib
 
@@ -83,6 +89,9 @@ inputs, labels = next(iter(test_dataloader))
 with torch.no_grad():
     outputs = model(inputs)
     _, predicted = torch.max(outputs, 1)
+
+
+##---------------------------plotting-------------------------------------##
 
 # Plot the results
 fig, axes = plt.subplots(1, 4, figsize=(10, 5))
