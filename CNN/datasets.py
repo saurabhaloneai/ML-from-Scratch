@@ -12,14 +12,14 @@ class WhaleDataset(Dataset):
         self.target_dict = {}
 
         # Loop through the folders
-        for i, folder in enumerate(os.listdir(root_dir)):
+        folder_labels = sorted(os.listdir(root_dir))  # Sort the folder names
+        for i, folder in enumerate(folder_labels):
             folder_path = os.path.join(root_dir, folder)
             if os.path.isdir(folder_path):
                 self.target_dict[folder] = i  # Assign a target value to each folder
                 for file in os.listdir(folder_path):
                     file_path = os.path.join(folder_path, file)
-                    self.samples.append((file_path, i))  # (file_path, target)
-
+                    self.samples.append((file_path, i))
     def __len__(self):
         return len(self.samples)
 
