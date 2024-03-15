@@ -1,6 +1,6 @@
 # ml-from-Scratch
 
-# let's write me optimize pyhton code 
+
 
 ## TODO :
 1. CNN
@@ -11,8 +11,9 @@
 6. Transformer 
 7. Vit
 8. llama -2 
-9. stabale - difussion 
-10. GANs:
+9. VAEs
+10. stabale - difussion 
+11. GANs:
 
 
 # Transformer - first paper - > Attention is all you need

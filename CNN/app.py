@@ -18,7 +18,7 @@ preprocess = transforms.Compose([
 ])
 
 # Define category names
-category_names = {0: "Beluga Whale", 1: "Blue Whale",2: "Fin Whale", 3: "Humpback Whale", 4: "Killer(Orca) Whale"}
+category_names = {0: "Beluga Whale", 1: "Blue Whale", 2: "Fin Whale", 3: "Humpback Whale", 4: "Killer(Orca) Whale"}
 
 def main():
     st.title("CNN Model Deployment")
