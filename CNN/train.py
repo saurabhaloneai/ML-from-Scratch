@@ -1,6 +1,7 @@
 
 
 from model import CNN
+####
 #lets build the cnn from scratch by combininig all we learn 
 
 # Create dataset and dataloader
